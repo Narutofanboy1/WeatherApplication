@@ -4,9 +4,24 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+
 @{
     ViewData["Title"] = "Weather Forecast";
+
+    /* 
+     * логика за потребителите (регистриран или гост),
+     * относно за колко дни напред ще виждат информацията
+     */
+    int forecastDaysToShow = 3; 
+
+    if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+    {
+        forecastDaysToShow = 7; // регистрираните потребители виждат за 7 дни напред 
+    }
+
+    var forecastsToShow = User.IsInRole("Admin") ? Model : Model.Take(forecastDaysToShow);
 }
+
 
 <h1>Weather Forecast</h1>
 
@@ -37,7 +52,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in forecastsToShow)
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
