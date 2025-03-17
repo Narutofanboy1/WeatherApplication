@@ -37,17 +37,22 @@
         <tr>
             <th>@Html.DisplayNameFor(model => model.DayOfWeek)</th>
             <th>@Html.DisplayNameFor(model => model.WeatherDescription)</th>
-            <th>@Html.DisplayNameFor(model => model.MaxTemperature)</th>
-            <th>@Html.DisplayNameFor(model => model.MinTemperature)</th>
-            <th>@Html.DisplayNameFor(model => model.WindSpeed)</th>
-            <th>@Html.DisplayNameFor(model => model.WindDirection)</th>
-            <th>@Html.DisplayNameFor(model => model.RainProbability)</th>
-            <th>@Html.DisplayNameFor(model => model.Sunrise)</th>
-            <th>@Html.DisplayNameFor(model => model.Sunset)</th>
-            <th>@Html.DisplayNameFor(model => model.MoonPhase)</th>
+
+            @if (User.Identity.IsAuthenticated) 
+            {
+                <th>@Html.DisplayNameFor(model => model.MaxTemperature)</th>
+                <th>@Html.DisplayNameFor(model => model.MinTemperature)</th>
+                <th>@Html.DisplayNameFor(model => model.WindSpeed)</th>
+                <th>@Html.DisplayNameFor(model => model.WindDirection)</th>
+                <th>@Html.DisplayNameFor(model => model.RainProbability)</th>
+                <th>@Html.DisplayNameFor(model => model.Sunrise)</th>
+                <th>@Html.DisplayNameFor(model => model.Sunset)</th>
+                <th>@Html.DisplayNameFor(model => model.MoonPhase)</th>
+            }
+
             @if (User.IsInRole("Admin"))
             {
-                <th>Actions</th>
+                <th>Действия</th>
             }
         </tr>
     </thead>
@@ -57,21 +62,23 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
                 <td>@Html.DisplayFor(modelItem => item.WeatherDescription)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaxTemperature)</td>
-                <td>@Html.DisplayFor(modelItem => item.MinTemperature)</td>
-                <td>@Html.DisplayFor(modelItem => item.WindSpeed)</td>
-                <td>@Html.DisplayFor(modelItem => item.WindDirection)</td>
-                <td>@Html.DisplayFor(modelItem => item.RainProbability)%</td>
-                <td>@Html.DisplayFor(modelItem => item.Sunrise)</td>
-                <td>@Html.DisplayFor(modelItem => item.Sunset)</td>
-                <td>@Html.DisplayFor(modelItem => item.MoonPhase)</td>
 
-                
+                @if (User.Identity.IsAuthenticated) 
+                {
+                    <td>@Html.DisplayFor(modelItem => item.MaxTemperature)</td>
+                    <td>@Html.DisplayFor(modelItem => item.MinTemperature)</td>
+                    <td>@Html.DisplayFor(modelItem => item.WindSpeed)</td>
+                    <td>@Html.DisplayFor(modelItem => item.WindDirection)</td>
+                    <td>@Html.DisplayFor(modelItem => item.RainProbability)%</td>
+                    <td>@Html.DisplayFor(modelItem => item.Sunrise)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Sunset)</td>
+                    <td>@Html.DisplayFor(modelItem => item.MoonPhase)</td>
+                }
 
                 @if (User.IsInRole("Admin"))
                 {
                     <td>
-                        <a asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Промени</a> |
+                        <a asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a> |
                         <a asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a> |
                         <a asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
                     </td>
