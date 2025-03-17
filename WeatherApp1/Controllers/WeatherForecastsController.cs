@@ -23,8 +23,30 @@ namespace WeatherApp1.Controllers
         // GET: WeatherForecasts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.WeatherForecasts.ToListAsync());
+            // Fetch all weather forecasts from the database
+            var weatherForecasts = await _context.WeatherForecasts.ToListAsync();
+
+            // Create a dictionary to map days of the week to a numerical value
+            var dayOrder = new Dictionary<string, int>
+    {
+        { "Monday", 1 },
+        { "Tuesday", 2 },
+        { "Wednesday", 3 },
+        { "Thursday", 4 },
+        { "Friday", 5 },
+        { "Saturday", 6 },
+        { "Sunday", 7 }
+    };
+
+            // Order the weather forecasts by the custom day order
+            var orderedWeatherForecasts = weatherForecasts
+                .OrderBy(f => dayOrder[f.DayOfWeek]) // Sort using the dictionary for the correct order
+                .ToList();
+
+            // Return the view with the ordered list
+            return View(orderedWeatherForecasts);
         }
+
 
         // GET: WeatherForecasts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -142,6 +164,12 @@ namespace WeatherApp1.Controllers
                 ModelState.AddModelError("Sunrise", "Изгревът трябва да е преди залеза.");
                 ModelState.AddModelError("Sunset", "Залезът трябва да е след изгрева.");
             }
+
+        //    if (!string.IsNullOrEmpty(weatherForecast.MoonPhase))
+          //  {
+           //     string moonPhaseImagePath = $"/images/moon_phases/{weatherForecast.MoonPhase}.jpg";
+                // You can check if the file actually exists, but since the file paths should already be defined, we'll skip this step
+           // }
 
             if (ModelState.IsValid)
             {

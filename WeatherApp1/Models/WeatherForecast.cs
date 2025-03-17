@@ -7,7 +7,7 @@ public class WeatherForecast
 {
     public int Id { get; set; }
     public string DayOfWeek { get; set; }
-    public string WeatherDescription { get; set; } // "predimno slanchevo", etc...
+    public string WeatherDescription { get; set; } 
     public int MaxTemperature { get; set; }
     public int MinTemperature { get; set; }
     public int WindSpeed { get; set; }
