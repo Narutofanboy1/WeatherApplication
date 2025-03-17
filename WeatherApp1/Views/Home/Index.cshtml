@@ -1,8 +1,65 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<WeatherApp1.Models.WeatherForecast>
+@using Microsoft.AspNetCore.Identity
+@using WeatherApp1.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Weather Forecast";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Weather Forecast</h1>
+
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-controller="WeatherForecasts" asp-action="Create">Create New</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.DayOfWeek)</th>
+            <th>@Html.DisplayNameFor(model => model.WeatherDescription)</th>
+            <th>@Html.DisplayNameFor(model => model.MaxTemperature)</th>
+            <th>@Html.DisplayNameFor(model => model.MinTemperature)</th>
+            <th>@Html.DisplayNameFor(model => model.WindSpeed)</th>
+            <th>@Html.DisplayNameFor(model => model.WindDirection)</th>
+            <th>@Html.DisplayNameFor(model => model.RainProbability)</th>
+            <th>@Html.DisplayNameFor(model => model.Sunrise)</th>
+            <th>@Html.DisplayNameFor(model => model.Sunset)</th>
+            <th>@Html.DisplayNameFor(model => model.MoonPhase)</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.DayOfWeek)</td>
+                <td>@Html.DisplayFor(modelItem => item.WeatherDescription)</td>
+                <td>@Html.DisplayFor(modelItem => item.MaxTemperature)</td>
+                <td>@Html.DisplayFor(modelItem => item.MinTemperature)</td>
+                <td>@Html.DisplayFor(modelItem => item.WindSpeed)</td>
+                <td>@Html.DisplayFor(modelItem => item.WindDirection)</td>
+                <td>@Html.DisplayFor(modelItem => item.RainProbability)%</td>
+                <td>@Html.DisplayFor(modelItem => item.Sunrise)</td>
+                <td>@Html.DisplayFor(modelItem => item.Sunset)</td>
+                <td>@Html.DisplayFor(modelItem => item.MoonPhase)</td>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
