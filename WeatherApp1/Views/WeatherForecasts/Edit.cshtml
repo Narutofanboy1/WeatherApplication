@@ -80,8 +80,18 @@
                 <span asp-validation-for="Sunset" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MoonPhase" class="control-label"></label>
-                <input asp-for="MoonPhase" class="form-control" />
+                <label asp-for="MoonPhase" class="control-label">Select Moon Phase</label>
+                <select asp-for="MoonPhase" class="form-control">
+                    <option value="">-- Select Moon Phase --</option>
+                    <option value="NewMoon">New Moon</option>
+                    <option value="WaxingCrescent">Waxing Crescent</option>
+                    <option value="FirstQuarter">First Quarter</option>
+                    <option value="WaxingGibbous">Waxing Gibbous</option>
+                    <option value="FullMoon">Full Moon</option>
+                    <option value="WaningGibbous">Waning Gibbous</option>
+                    <option value="LastQuarter">Last Quarter</option>
+                    <option value="WaningCrescent">Waning Crescent</option>
+                </select>
                 <span asp-validation-for="MoonPhase" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -28,7 +28,7 @@
 @if (User.IsInRole("Admin"))
 {
     <p>
-        <a asp-controller="WeatherForecasts" asp-action="Create">Create New</a>
+        <a asp-controller="WeatherForecasts" asp-action="Create">Създай нова прогноза</a>
     </p>
 }
 
@@ -71,9 +71,9 @@
                 @if (User.IsInRole("Admin"))
                 {
                     <td>
-                        <a asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Промени</a> |
+                        <a asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a> |
+                        <a asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
                     </td>
                 }
             </tr>
