@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WeatherApp1.Models;
 
@@ -6,10 +7,6 @@ public class WeatherForecast
 {
     public int Id { get; set; }
     public string DayOfWeek { get; set; }
-
-    //[NotMapped] // This will not be stored in the database
-    //public List<string> WeatherDescriptions { get; set; } = new List<string>();
-
     public string WeatherDescription { get; set; } // "predimno slanchevo", etc...
     public int MaxTemperature { get; set; }
     public int MinTemperature { get; set; }

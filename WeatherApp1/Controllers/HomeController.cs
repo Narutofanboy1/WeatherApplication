@@ -11,7 +11,7 @@ namespace WeatherApp1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context; // Add DbContext
+        private readonly ApplicationDbContext _context; 
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {

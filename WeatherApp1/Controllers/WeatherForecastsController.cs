@@ -59,10 +59,31 @@ namespace WeatherApp1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DayOfWeek,WeatherDescription,MaxTemperature,MinTemperature,WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast/*, List<string> WeatherDescriptions*/)
         {
+            if (weatherForecast.MaxTemperature < weatherForecast.MinTemperature)
+            {
+                ModelState.AddModelError("MaxTemperature", "Максималната температура трябва да бъде по-голяма от минималната температура.");
+                ModelState.AddModelError("MinTemperature", "Минималната температура трябва да бъде по-малка от максималната температура.");
+            }
+
+            if (weatherForecast.WindSpeed < 0)
+            {
+                ModelState.AddModelError("WindSpeed", "Скоростта на вятъра не може да бъде отрицателна.");
+            }
+
+            if (weatherForecast.RainProbability < 0 || weatherForecast.RainProbability > 100)
+            {
+                ModelState.AddModelError("RainProbability", "Вероятността за дъжд трябва да е между 0 и 100 %.");
+            }
+
+            if (weatherForecast.Sunrise >= weatherForecast.Sunset)
+            {
+                ModelState.AddModelError("Sunrise", "Изгревът трябва да е преди залеза.");
+                ModelState.AddModelError("Sunset", "Залезът трябва да е след изгрева.");
+
+            }
+
             if (ModelState.IsValid)
             {
-            //   weatherForecast.WeatherDescription = string.Join(", ", WeatherDescriptions);
-
                 _context.Add(weatherForecast);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,6 +119,28 @@ namespace WeatherApp1.Controllers
             if (id != weatherForecast.Id)
             {
                 return NotFound();
+            }
+
+            if (weatherForecast.MaxTemperature < weatherForecast.MinTemperature)
+            {
+                ModelState.AddModelError("MaxTemperature", "Максималната температура трябва да бъде по-голяма от минималната температура.");
+                ModelState.AddModelError("MinTemperature", "Минималната температура трябва да бъде по-малка от максималната температура.");
+            }
+
+            if (weatherForecast.WindSpeed < 0)
+            {
+                ModelState.AddModelError("WindSpeed", "Скоростта на вятъра не може да бъде отрицателна.");
+            }
+
+            if (weatherForecast.RainProbability < 0 || weatherForecast.RainProbability > 100)
+            {
+                ModelState.AddModelError("RainProbability", "Вероятността за дъжд трябва да е между 0 и 100 %.");
+            }
+
+            if (weatherForecast.Sunrise >= weatherForecast.Sunset)
+            {
+                ModelState.AddModelError("Sunrise", "Изгревът трябва да е преди залеза.");
+                ModelState.AddModelError("Sunset", "Залезът трябва да е след изгрева.");
             }
 
             if (ModelState.IsValid)
