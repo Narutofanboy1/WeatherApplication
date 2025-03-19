@@ -15,6 +15,8 @@
         }
 
         var forecastsToShow = User.IsInRole("Admin") ? Model : Model.Take(forecastDaysToShow);
+
+
     }
 
     <h1 class="text-center mb-4">Прогноза за времето</h1>
