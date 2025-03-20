@@ -12,26 +12,33 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <!-- DayOfWeek Drop-down -->
             <div class="form-group">
-                <label asp-for="DayOfWeek" class="control-label">Select Day</label>
-                @* Drop-down list for selecting the day of the week *@
+                <label asp-for="DayOfWeek" class="control-label">Ден</label>
                 <select asp-for="DayOfWeek" class="form-control">
-                    <option value="">-- Select Day --</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
+                    <option value="">-- избери ден --</option>
+                    <option value="Monday">Понеделник</option>
+                    <option value="Tuesday">Вторник</option>
+                    <option value="Wednesday">Сряда</option>
+                    <option value="Thursday">Четвъртък</option>
+                    <option value="Friday">Петък</option>
+                    <option value="Saturday">Събота</option>
+                    <option value="Sunday">Неделя</option>
                 </select>
                 <span asp-validation-for="DayOfWeek" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WeatherDescription" class="control-label"></label>
-                <input asp-for="WeatherDescription" class="form-control" />
+                <label asp-for="WeatherDescription" class="control-label">Време</label>
+                <select asp-for="WeatherDescription" class="form-control">
+                    <option value="">-- избери описание на времето --</option>
+                    <option value="Sunny">Sunny</option>
+                    <option value="Rainy">Rainy</option>
+                    <option value="Cloudy">Cloudy</option>
+                    <option value="Stormy">Stormy</option>
+                    <option value="Snowy">Snowy</option>
+                    <option value="Windy">Windy</option>
+                    <option value="Foggy">Foggy</option>
+                    <option value="Hazy">Hazy</option>
+                </select>
                 <span asp-validation-for="WeatherDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -50,10 +57,9 @@
                 <span asp-validation-for="WindSpeed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WindDirection" class="control-label">Select Wind Direction</label>
-                @* Drop-down list for selecting the wind direction *@
+                <label asp-for="WindDirection" class="control-label">Посока на вятъра</label>
                 <select asp-for="WindDirection" class="form-control">
-                    <option value="">-- Select Wind Direction --</option>
+                    <option value="">-- избери посока на вятъра --</option>
                     <option value="North">North</option>
                     <option value="North-East">North-East</option>
                     <option value="East">East</option>
@@ -81,17 +87,17 @@
                 <span asp-validation-for="Sunset" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MoonPhase" class="control-label">Select Moon Phase</label>
+                <label asp-for="MoonPhase" class="control-label">Фаза на луната</label>
                 <select asp-for="MoonPhase" class="form-control">
-                    <option value="">-- Select Moon Phase --</option>
-                    <option value="NewMoon">New Moon</option>
-                    <option value="WaxingCrescent">Waxing Crescent</option>
-                    <option value="FirstQuarter">First Quarter</option>
-                    <option value="WaxingGibbous">Waxing Gibbous</option>
-                    <option value="FullMoon">Full Moon</option>
-                    <option value="WaningGibbous">Waning Gibbous</option>
-                    <option value="LastQuarter">Last Quarter</option>
-                    <option value="WaningCrescent">Waning Crescent</option>
+                    <option value="">-- избери фаза на луната --</option>
+                    <option value="NewMoon">новолуние</option>
+                    <option value="WaxingCrescent">изгряващ полумесец</option>
+                    <option value="FirstQuarter">първа четвърт</option>
+                    <option value="WaxingGibbous">растяща луна</option>
+                    <option value="FullMoon">пълнолуние</option>
+                    <option value="WaningGibbous">намаляваща луна</option>
+                    <option value="LastQuarter">трета четвърт</option>
+                    <option value="WaningCrescent">залязващ полумесец</option>
                 </select>
                 <span asp-validation-for="MoonPhase" class="text-danger"></span>
             </div>
@@ -104,7 +110,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
 
 @section Scripts {

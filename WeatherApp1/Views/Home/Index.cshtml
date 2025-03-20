@@ -1,67 +1,80 @@
-﻿    @model IEnumerable<WeatherApp1.Models.WeatherForecast>
-    @using Microsoft.AspNetCore.Identity
-    @using WeatherApp1.Data
-    @inject SignInManager<ApplicationUser> SignInManager
-    @inject UserManager<ApplicationUser> UserManager
+﻿@model IEnumerable<WeatherApp1.Models.WeatherForecast>
+@using Microsoft.AspNetCore.Identity
+@using WeatherApp1.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
-    @{
-        ViewData["Title"] = "Прогноза за времето";
+@{
+    ViewData["Title"] = "Прогноза за времето";
 
-        int forecastDaysToShow = 3;
-
-        if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
-        {
-            forecastDaysToShow = 7; // Registered users see 7 days ahead
-        }
-
-        var forecastsToShow = User.IsInRole("Admin") ? Model : Model.Take(forecastDaysToShow);
-
-
-    }
-
-    <h1 class="text-center mb-4">Прогноза за времето</h1>
-
-    @if (User.IsInRole("Admin"))
+    int forecastDaysToShow = 3;
+    if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
     {
-        <p>
-            <a asp-controller="WeatherForecasts" asp-action="Create" class="btn btn-primary">Създай нова прогноза</a>
-        </p>
+        forecastDaysToShow = 7; // Registered users see 7 days ahead
     }
 
-    <!-- Forecasts in Vertical Card Layout for Everyone -->
-    <div class="row">
-        @foreach (var item in forecastsToShow)
+    var forecastsToShow = User.IsInRole("Admin") ? Model : Model.Take(forecastDaysToShow);
+
+    // Function to determine class based on weather description
+    string GetWeatherClass(string description)
+    {
+        return description switch
         {
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
-                        <p class="text-center text-muted">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
+            "Sunny" => "sunny",
+            "Cloudy" => "cloudy",
+            "Rainy" => "rainy",
+            "Stormy" => "stormy",
+            "Snowy" => "snowy",
+            _ => "default"
+        };
+    }
+}
 
-                        @if (User.Identity.IsAuthenticated) // Show more details for logged-in users
-                        {
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @Html.DisplayFor(modelItem => item.MaxTemperature)°C</li>
-                                <li class="list-group-item">🌡️ <strong>Мин. температура:</strong> @Html.DisplayFor(modelItem => item.MinTemperature)°C</li>
-                                <li class="list-group-item">💨 <strong>Скорост на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindSpeed) км/ч</li>
-                                <li class="list-group-item">🧭 <strong>Посока на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindDirection)</li>
-                                <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
-                                <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
-                                <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
-                                <li class="list-group-item">🌙 <strong>Фаза на луната:</strong> @Html.DisplayFor(modelItem => item.MoonPhase)</li>
-                            </ul>
-                        }
+<h1 class="text-center mb-4">Прогноза за времето</h1>
 
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <div class="text-center mt-3">
-                                <a class="btn btn-warning btn-sm" asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
-                                <a class="btn btn-info btn-sm" asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a>
-                                <a class="btn btn-danger btn-sm" asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
-                            </div>
-                        }
-                    </div>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-controller="WeatherForecasts" asp-action="Create" class="btn btn-primary">Създай нова прогноза</a>
+    </p>
+}
+
+<!-- Forecasts in Vertical Card Layout for Everyone -->
+
+<div class="row">
+    @foreach (var item in forecastsToShow)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card weather-card @GetWeatherClass(item.WeatherDescription)">
+                <div class="card-body">
+                    <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
+                    <p class="text-center text-muted">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
+
+                    @if (User.Identity.IsAuthenticated) // Show more details for logged-in users
+                    {
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @Html.DisplayFor(modelItem => item.MaxTemperature)°C</li>
+                            <li class="list-group-item">🌡️ <strong>Мин. температура:</strong> @Html.DisplayFor(modelItem => item.MinTemperature)°C</li>
+                            <li class="list-group-item">💨 <strong>Скорост на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindSpeed) км/ч</li>
+                            <li class="list-group-item">🧭 <strong>Посока на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindDirection)</li>
+                            <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
+                            <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
+                            <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
+                            <li class="list-group-item">🌙 <strong>Фаза на луната:</strong> @Html.DisplayFor(modelItem => item.MoonPhase)</li>
+                        </ul>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="text-center mt-3">
+                            <a class="btn btn-warning btn-sm" asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
+                            <a class="btn btn-info btn-sm" asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a>
+                            <a class="btn btn-danger btn-sm" asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
+                        </div>
+                    }
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div>
+

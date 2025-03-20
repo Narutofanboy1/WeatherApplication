@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,16 @@ namespace WeatherApp1.Controllers
     public class WeatherForecastsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WeatherForecastsController(ApplicationDbContext context)
+        public WeatherForecastsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
+
 
         // GET: WeatherForecasts
         public async Task<IActionResult> Index()
@@ -26,27 +32,43 @@ namespace WeatherApp1.Controllers
             // Fetch all weather forecasts from the database
             var weatherForecasts = await _context.WeatherForecasts.ToListAsync();
 
-            // Create a dictionary to map days of the week to a numerical value
+            // Get the current day of the week (DayOfWeek is an enum, where Sunday is 0 and Saturday is 6)
+            var currentDay = DateTime.Now.DayOfWeek;
+
+            // Filter out any forecasts from past days
+            var forecasts = weatherForecasts.Where(f =>
+                Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList().IndexOf((DayOfWeek)Enum.Parse(typeof(DayOfWeek), f.DayOfWeek)) >= (int)currentDay).ToList();
+
+            // Define the number of days to show based on user role and authentication status
+            int forecastDaysToShow = 3;
+            if (_signInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
+            {
+                forecastDaysToShow = 7; // Registered users see 7 days ahead
+            }
+
+            // Filter the forecasts based on the number of days to show (also keeping future days in mind)
+            var forecastsToShow = forecasts.Take(forecastDaysToShow).ToList();
+
+            // Create a dictionary to map days of the week to a numerical value for sorting
             var dayOrder = new Dictionary<string, int>
-    {
-        { "Monday", 1 },
-        { "Tuesday", 2 },
-        { "Wednesday", 3 },
-        { "Thursday", 4 },
-        { "Friday", 5 },
-        { "Saturday", 6 },
-        { "Sunday", 7 }
-    };
+            {
+                { "Monday", 1 },
+                { "Tuesday", 2 },
+                { "Wednesday", 3 },
+                { "Thursday", 4 },
+                { "Friday", 5 },
+                { "Saturday", 6 },
+                { "Sunday", 7 }
+            };
 
             // Order the weather forecasts by the custom day order
-            var orderedWeatherForecasts = weatherForecasts
+            var orderedWeatherForecasts = forecastsToShow
                 .OrderBy(f => dayOrder[f.DayOfWeek]) // Sort using the dictionary for the correct order
                 .ToList();
 
-            // Return the view with the ordered list
+            // Return the view with the ordered and filtered list
             return View(orderedWeatherForecasts);
         }
-
 
         // GET: WeatherForecasts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -108,7 +130,7 @@ namespace WeatherApp1.Controllers
             {
                 _context.Add(weatherForecast);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(weatherForecast);
         }
@@ -189,7 +211,7 @@ namespace WeatherApp1.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(weatherForecast);
         }
@@ -225,7 +247,7 @@ namespace WeatherApp1.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         private bool WeatherForecastExists(int id)
