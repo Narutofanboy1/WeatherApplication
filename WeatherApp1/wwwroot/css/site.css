@@ -24,94 +24,93 @@ body {
 
 /* Custom blue button for login/logout */
 .btn-blue {
-    background-color: #007bff; /* Blue color */
-    border-color: #007bff; /* Border color matches the button */
-    color: white; /* White text */
-    padding: 0.375rem 0.75rem; /* Adjust padding for better button appearance */
-    border-radius: 0.25rem; /* Rounded corners */
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
     font-weight: bold;
 }
 
-
-
-
-.btn-blue:hover {
-    background-color: #0c4452; /* Darker blue when hovered */
-    border-color: #004085; /* Darker border on hover */
-}
+    .btn-blue:hover {
+        background-color: #0c4452;
+        border-color: #004085;
+    }
 
 .navbar-brand-blue {
-    background-color: #007bff; /* Blue background */
-    color: white; /* White text */
-    padding: 0.375rem 0.75rem; /* Padding to match the button size */
-    border-radius: 0.25rem; /* Rounded corners */
-    text-decoration: none; /* Remove underline */
-    font-weight: bold; /* Make the text bold */
+    background-color: #007bff;
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: bold;
 }
 
     .navbar-brand-blue:hover {
-        background-color: #0c4452; /* Darker blue when hovered */
-        color: white; /* Ensure the text remains white */
-        text-decoration: none; /* Remove underline on hover */
+        background-color: #0c4452;
+        color: white;
+        text-decoration: none;
     }
 
-.btn-primary{
-font-weight:bold;
-}
-
-.btn-primary:hover {
+.btn-primary {
     font-weight: bold;
-    background-color: #0c4452;
 }
 
+    .btn-primary:hover {
+        font-weight: bold;
+        background-color: #0c4452;
+    }
+
+/* Weather Card Styling */
 .weather-card {
-    border-radius: 15px; 
+    border-radius: 15px;
     border-width: 8px;
     border-style: solid;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     padding: 15px;
-    color: white; 
+    color: white;
     width: 100%;
-    max-width: 480px; 
+    max-width: 450px;
     margin: 0px;
+    height: 100%;
 }
 
 /* Background colors for weather types */
 .sunny {
-    background-color: #ffc107; 
+    background-color: #ffc107;
 }
 
 .cloudy {
-    background-color: #6c757d; 
+    background-color: #6c757d;
 }
 
 .rainy {
-    background-color: #bcf4ff; 
+    background-color: #bcf4ff;
 }
 
 .stormy {
-    background-color: #dc3545; 
+    background-color: #dc3545;
 }
 
 .snowy {
-    background-color: #17a2b8; 
+    background-color: #17a2b8;
 }
 
 .default {
-    background-color: #343a40; 
+    background-color: #343a40;
 }
 
 .weather-card .list-group-item {
-    background-color: transparent; 
-    border-width: 0px; 
-    color: white; 
+    background-color: transparent;
+    border-width: 0px;
+    color: white;
     font-weight: bold;
 }
 
 /* Style the text in the weather card */
 .weather-card h5,
 .weather-card p {
-    color: white; /* Keep headings readable */
+    color: white;
     text-align: center;
 }
 
@@ -130,3 +129,59 @@ font-weight:bold;
     background-color: #dc3545;
     border: none;
 }
+
+.weather-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    max-width: 1500px; /* Prevents stretching */
+    margin: auto;
+}
+
+.weather-slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+}
+
+.weather-card-container {
+    flex: 0 0 30%; /* 3 cards per view */
+    margin: 0 10px;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 24px;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+.left-btn {
+    left: 10px;
+}
+
+.right-btn {
+    right: 10px;
+}
+
+.nav-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Responsive Adjustments */
+/*@media (max-width: 768px) {
+    .weather-card-container {
+        flex: 0 0 90%;*/ /* Show 1 card per view on mobile */
+    /*}
+}*/

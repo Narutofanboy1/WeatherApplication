@@ -39,42 +39,86 @@
     </p>
 }
 
-<!-- Forecasts in Vertical Card Layout for Everyone -->
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <button class="nav-btn left-btn" onclick="prevSlide()">&#10094;</button> 
+    </p>
+}
 
-<div class="row">
-    @foreach (var item in forecastsToShow)
-    {
-        <div class="col-md-4 mb-4">
-            <div class="card weather-card @GetWeatherClass(item.WeatherDescription)">
-                <div class="card-body">
-                    <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
-                    <p class="text-center text-muted">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
+<div class="weather-container">
 
-                    @if (User.Identity.IsAuthenticated) // Show more details for logged-in users
-                    {
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @Html.DisplayFor(modelItem => item.MaxTemperature)°C</li>
-                            <li class="list-group-item">🌡️ <strong>Мин. температура:</strong> @Html.DisplayFor(modelItem => item.MinTemperature)°C</li>
-                            <li class="list-group-item">💨 <strong>Скорост на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindSpeed) км/ч</li>
-                            <li class="list-group-item">🧭 <strong>Посока на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindDirection)</li>
-                            <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
-                            <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
-                            <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
-                            <li class="list-group-item">🌙 <strong>Фаза на луната:</strong> @Html.DisplayFor(modelItem => item.MoonPhase)</li>
-                        </ul>
-                    }
+    <div class="weather-slider">
+        @foreach (var item in forecastsToShow)
+        {
+            <div class="weather-card-container">
+                <div class="card weather-card @GetWeatherClass(item.WeatherDescription)">
+                    <div class="card-body">
+                        <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
+                        <p class="text-center text-muted">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
 
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <div class="text-center mt-3">
-                            <a class="btn btn-warning btn-sm" asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
-                            <a class="btn btn-info btn-sm" asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a>
-                            <a class="btn btn-danger btn-sm" asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
-                        </div>
-                    }
+                        @if (User.Identity.IsAuthenticated) // Show more details for logged-in users
+                        {
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @Html.DisplayFor(modelItem => item.MaxTemperature)°C</li>
+                                <li class="list-group-item">🌡️ <strong>Мин. температура:</strong> @Html.DisplayFor(modelItem => item.MinTemperature)°C</li>
+                                <li class="list-group-item">💨 <strong>Скорост на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindSpeed) км/ч</li>
+                                <li class="list-group-item">🧭 <strong>Посока на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindDirection)</li>
+                                <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
+                                <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
+                                <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
+                                <li class="list-group-item">🌙 <strong>Фаза на луната:</strong> @Html.DisplayFor(modelItem => item.MoonPhase)</li>
+                            </ul>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="text-center mt-3">
+                                <a class="btn btn-warning btn-sm" asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
+                                <a class="btn btn-info btn-sm" asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a>
+                                <a class="btn btn-danger btn-sm" asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
+
 </div>
+
+@if (User.Identity.IsAuthenticated)
+{
+<p>
+    <button class="nav-btn right-btn" onclick="nextSlide()">&#10095;</button> <!-- Right Button -->
+</p>
+
+}
+@section Scripts {
+    <script>
+        let index = 0;
+        const cardWidth = document.querySelector('.weather-card-container').offsetWidth + 20; // Include margin
+        const slider = document.querySelector('.weather-slider');
+        const totalCards = document.querySelectorAll('.weather-card-container').length;
+        const visibleCards = 3; // Number of visible cards at a time
+
+        function nextSlide() {
+            if (index < totalCards - visibleCards) {
+                index++;
+                updateSlider();
+            }
+        }
+
+        function prevSlide() {
+            if (index > 0) {
+                index--;
+                updateSlider();
+            }
+        }
+
+        function updateSlider() {
+            slider.style.transform = `translateX(-${index * cardWidth}px)`;
+        }
+    </script>
+}
 
