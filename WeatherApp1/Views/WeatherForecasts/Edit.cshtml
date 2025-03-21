@@ -58,18 +58,17 @@
                 <span asp-validation-for="WindSpeed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WindDirection" class="control-label">Select Wind Direction</label>
-                @* Drop-down list for selecting the wind direction *@
+                <label asp-for="WindDirection" class="control-label">Посока на вятъра</label>
                 <select asp-for="WindDirection" class="form-control">
-                    <option value="">-- Select Wind Direction --</option>
-                    <option value="North">North</option>
-                    <option value="North-East">North-East</option>
-                    <option value="East">East</option>
-                    <option value="South-East">South-East</option>
-                    <option value="South">South</option>
-                    <option value="South-West">South-West</option>
-                    <option value="West">West</option>
-                    <option value="North-West">North-West</option>
+                    <option value="">-- избери посока на вятъра --</option>
+                    <option value="Север">Север</option>
+                    <option value="Североизток">Североизток</option>
+                    <option value="Изток">Изток</option>
+                    <option value="Югоизток">Югоизток</option>
+                    <option value="Юг">Юг</option>
+                    <option value="Югозапад">Югозапад</option>
+                    <option value="Запад">Запад</option>
+                    <option value="Северозапад">Северозапад</option>
                 </select>
                 <span asp-validation-for="WindDirection" class="text-danger"></span>
             </div>

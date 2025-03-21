@@ -185,3 +185,43 @@ body {
         flex: 0 0 90%;*/ /* Show 1 card per view on mobile */
     /*}
 }*/
+
+/* Settings Icon Styling */
+.settings-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+    .settings-icon:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+/* Hidden Dropdown Menu */
+.settings-menu {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 100;
+}
+
+    /* Style for buttons inside the menu */
+    .settings-menu a {
+        display: block;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    /* Show when active */
+    .settings-menu.active {
+        display: block;
+    }

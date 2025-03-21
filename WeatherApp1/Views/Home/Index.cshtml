@@ -42,22 +42,32 @@
 @if (User.Identity.IsAuthenticated)
 {
     <p>
-        <button class="nav-btn left-btn" onclick="prevSlide()">&#10094;</button> 
+        <button id="prevBtn" class="nav-btn left-btn" onclick="prevSlide()">&#10094;</button>
     </p>
 }
 
 <div class="weather-container">
-
     <div class="weather-slider">
         @foreach (var item in forecastsToShow)
         {
             <div class="weather-card-container">
                 <div class="card weather-card @GetWeatherClass(item.WeatherDescription)">
                     <div class="card-body">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="settings-icon" onclick="toggleSettingsMenu(this)">
+                                ⚙️
+                                <div class="settings-menu">
+                                    <a class="btn btn-warning btn-sm" asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
+                                    <a class="btn btn-info btn-sm" asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a>
+                                    <a class="btn btn-danger btn-sm" asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
+                                </div>
+                            </div>
+                        }
                         <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
                         <p class="text-center text-muted">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
 
-                        @if (User.Identity.IsAuthenticated) // Show more details for logged-in users
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @Html.DisplayFor(modelItem => item.MaxTemperature)°C</li>
@@ -70,37 +80,27 @@
                                 <li class="list-group-item">🌙 <strong>Фаза на луната:</strong> @Html.DisplayFor(modelItem => item.MoonPhase)</li>
                             </ul>
                         }
-
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <div class="text-center mt-3">
-                                <a class="btn btn-warning btn-sm" asp-controller="WeatherForecasts" asp-action="Edit" asp-route-id="@item.Id">Редактирай</a>
-                                <a class="btn btn-info btn-sm" asp-controller="WeatherForecasts" asp-action="Details" asp-route-id="@item.Id">Детайли</a>
-                                <a class="btn btn-danger btn-sm" asp-controller="WeatherForecasts" asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
-                            </div>
-                        }
                     </div>
                 </div>
             </div>
         }
     </div>
-
 </div>
 
 @if (User.Identity.IsAuthenticated)
 {
-<p>
-    <button class="nav-btn right-btn" onclick="nextSlide()">&#10095;</button> <!-- Right Button -->
-</p>
-
+    <p>
+        <button id="nextBtn" class="nav-btn right-btn" onclick="nextSlide()">&#10095;</button>
+    </p>
 }
+
 @section Scripts {
     <script>
         let index = 0;
         const cardWidth = document.querySelector('.weather-card-container').offsetWidth + 20; // Include margin
         const slider = document.querySelector('.weather-slider');
         const totalCards = document.querySelectorAll('.weather-card-container').length;
-        const visibleCards = 3; // Number of visible cards at a time
+        const visibleCards = 3;
 
         function nextSlide() {
             if (index < totalCards - visibleCards) {
@@ -118,7 +118,46 @@
 
         function updateSlider() {
             slider.style.transform = `translateX(-${index * cardWidth}px)`;
+            updateNavButtons(); // Check visibility of buttons
         }
+
+        function updateNavButtons() {
+            // Show/hide buttons based on the current index
+            document.getElementById("prevBtn").style.display = (index > 0) ? "block" : "none";
+            document.getElementById("nextBtn").style.display = (index < totalCards - visibleCards) ? "block" : "none";
+        }
+
+        // Initial check to hide the "Back" button if needed
+        document.addEventListener("DOMContentLoaded", updateNavButtons);
+
+
+        // ============================
+        // Settings Menu Functionality
+        // ============================
+        function toggleSettingsMenu(element) {
+            // Close any open menus first
+            document.querySelectorAll(".settings-menu").forEach(menu => {
+                if (menu !== element.querySelector(".settings-menu")) {
+                    menu.classList.remove("active");
+                }
+            });
+
+            // Toggle the clicked menu
+            let menu = element.querySelector(".settings-menu");
+            menu.classList.toggle("active");
+        }
+
+        // Close the settings menu when clicking outside
+        document.addEventListener("click", function (event) {
+            let isClickInside = event.target.closest(".settings-icon");
+
+            if (!isClickInside) {
+                document.querySelectorAll(".settings-menu").forEach(menu => {
+                    menu.classList.remove("active");
+                });
+            }
+        });
+
     </script>
 }
 

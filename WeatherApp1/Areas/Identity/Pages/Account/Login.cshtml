@@ -32,9 +32,9 @@
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Влез</button>
                 </div>
                 <div>
-                    <p>
+                  @*   <p>
                         <a id="forgot-password" asp-page="./ForgotPassword">Забравена парола?</a>
-                    </p>
+                    </p> *@
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Създай нов акаунт</a>
                     </p>
@@ -46,7 +46,7 @@
         </section>
     </div>
     <div class="col-md-6 col-md-offset-2">
-        <section>
+        @* <section>
             <h3>Use another service to log in.</h3>
             <hr />
             @{
@@ -73,7 +73,7 @@
                     </form>
                 }
             }
-        </section>
+        </section> *@
     </div>
 </div>
 
