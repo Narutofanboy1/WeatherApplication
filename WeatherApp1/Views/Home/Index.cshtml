@@ -28,6 +28,22 @@
             _ => "default"
         };
     }
+    // Function to determine moon phase image
+    string GetMoonPhaseImage(string moonPhase)
+    {
+        return moonPhase switch
+        {
+            "пълнолуние" => "https://cdn.britannica.com/96/208796-050-47869FC7/full-moon.jpg",
+            "първа четвърт" => "https://pbs.twimg.com/media/FFUOdsCXoAMPyn2.png",
+            "трета четвърт" => "https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTEyL3Vwd2s3OTIxNjMyMi13aWtpbWVkaWEtaW1hZ2Utam9iMTQ0OS1sYmcxcnRjaS5qcGc.jpg",
+            "намаляваща луна" => "https://earthsky.org/upl/2023/02/Waning-gibbous-Feb-10-2023-Jerermy-Likness-e1677002332927.jpg",
+            "растяща луна" => "https://c.tadst.com/gfx/1200x630/waxing-gibbous-moon.jpg?1",
+            "залязващ полумесец" => "https://images.fineartamerica.com/images-medium-large-5/waning-crescent-moon-nasagsfc-svsscience-photo-library.jpg",
+            "изгряващ полумесец" => "https://images.fineartamerica.com/images-medium-large-5/waxing-crescent-moon-nasagsfc-svsscience-photo-library.jpg",
+            "новолуние" => "https://c.tadst.com/gfx/600x337/total-solar-elipse-diamondring.jpg?1",
+            _ => "https://cdn.britannica.com/96/208796-050-47869FC7/full-moon.jpg" // Default to full moon if unknown
+        };
+    }
 }
 
 <h1 class="text-center mb-4">Прогноза за времето</h1>
@@ -77,7 +93,19 @@
                                 <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
                                 <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
                                 <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
-                                <li class="list-group-item">🌙 <strong>Фаза на луната:</strong> @Html.DisplayFor(modelItem => item.MoonPhase)</li>
+                                <li class="list-group-item">
+                                    🌙 <strong>Фаза на луната:</strong>
+                                    <div class="moon-phase-container">
+                                        <img src="@GetMoonPhaseImage(item.MoonPhase)"
+                                             alt="@item.MoonPhase"
+                                             class="moon-phase-img"
+                                             onmouseover="showTooltip(this, '@item.MoonPhase')"
+                                             onmouseout="hideTooltip(this)" />
+
+                                        <div class="moon-tooltip">@item.MoonPhase</div>
+
+                                    </div>
+                                </li>
                             </ul>
                         }
                     </div>
@@ -130,7 +158,6 @@
         // Initial check to hide the "Back" button if needed
         document.addEventListener("DOMContentLoaded", updateNavButtons);
 
-
         // ============================
         // Settings Menu Functionality
         // ============================
@@ -158,6 +185,17 @@
             }
         });
 
+        function showTooltip(element, text) {
+            let tooltip = element.nextElementSibling;
+            tooltip.textContent = text;
+            tooltip.style.visibility = "visible";
+            tooltip.style.opacity = "1";
+        }
+
+        function hideTooltip(element) {
+            let tooltip = element.nextElementSibling;
+            tooltip.style.visibility = "hidden";
+            tooltip.style.opacity = "0";
+        }
     </script>
 }
-

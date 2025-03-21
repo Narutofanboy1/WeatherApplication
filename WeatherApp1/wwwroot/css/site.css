@@ -225,3 +225,38 @@ body {
     .settings-menu.active {
         display: block;
     }
+
+.moon-phase-container {
+    position: relative;
+    display: inline-block;
+}
+
+.moon-phase-img {
+    width: 40px; /* Adjust size */
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: none !important;
+}
+
+.moon-tooltip {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 1px;
+    white-space: nowrap;
+    font-size: 14px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+.moon-phase-container:hover .moon-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
