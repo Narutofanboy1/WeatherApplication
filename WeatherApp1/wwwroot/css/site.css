@@ -20,6 +20,7 @@ html {
 
 body {
     margin-bottom: 60px;
+
 }
 
 /* Custom blue button for login/logout */
@@ -37,20 +38,29 @@ body {
         border-color: #004085;
     }
 
-.navbar-brand-blue {
-    background-color: #007bff;
-    color: white;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.25rem;
-    text-decoration: none;
-    font-weight: bold;
+.navbar {
+    background-color: #fed002 !important; /* Bright Yellow */
+    border-bottom: 3px solid #d4b20a; /* Slightly darker yellow border */
 }
 
-    .navbar-brand-blue:hover {
-        background-color: #0c4452;
-        color: white;
-        text-decoration: none;
+    .navbar .navbar-brand {
+        color: white; /* Black text for contrast */
+        font-weight: bold;
+        font-size: 1.5rem;
     }
+
+    .navbar .navbar-toggler-icon {
+        filter: invert(1); /* Ensures visibility */
+    }
+
+    .navbar .navbar-nav .nav-link {
+        color: #000000 !important; /* Black links */
+        font-weight: 500;
+    }
+
+        /*.navbar .navbar-nav .nav-link:hover {
+            color: #d4b20a !important;*/ /* Darker yellow on hover */
+        /*}*/
 
 .btn-primary {
     font-weight: bold;
@@ -259,4 +269,8 @@ body {
 .moon-phase-container:hover .moon-tooltip {
     visibility: visible;
     opacity: 1;
+}
+
+.nav-btn {
+    position: absolute;
 }
