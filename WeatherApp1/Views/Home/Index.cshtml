@@ -37,6 +37,24 @@
             _ => "bg-gray-200 text-black"  
         };
     }
+
+    // Function to get weather emoji based on description
+    string GetWeatherEmoji(string description)
+    {
+        return description switch
+        {
+            "предимно слънчево" => "☀️",
+            "слънчево" => "☀️",
+            "предимно облачно" => "🌥️",
+            "облачно" => "☁️",
+            "предимно слънчево кратък дъжд" => "🌤️🌧️",
+            "предимно слънчево кратък сняг" => "🌤️❄️",
+            "предимно облачно сняг" => "🌥️❄️",
+            "облачно дъжд" => "☁️🌧️",
+            "облачно сняг" => "☁️❄️",
+            _ => "🌈"
+        };
+    }
     // Function to determine moon phase image
     string GetMoonPhaseImage(string moonPhase)
     {
@@ -64,7 +82,7 @@
     </p>
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated && forecastsToShow.Any())
 {
     <p>
         <button id="prevBtn" class="nav-btn left-btn" onclick="prevSlide()">&#10094;</button>
@@ -102,6 +120,17 @@
                                 <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
                                 <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
                                 <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
+                                @{
+                                    // Calculate Day Duration
+                                    TimeSpan dayDuration = item.Sunset - item.Sunrise;
+                                    string formattedDuration = $"{dayDuration.Hours} ч. {dayDuration.Minutes} мин.";
+                                }
+
+                                <li class="list-group-item">
+                                    ⏳ <strong>Продължителност на деня:</strong>
+                                    <br> <!-- Forces a new line for better alignment -->
+                                    @formattedDuration
+                                </li>
                                 <li class="list-group-item">
                                     🌙 <strong>Фаза на луната:</strong>
                                     <div class="moon-phase-container">
@@ -124,7 +153,7 @@
     </div>
 </div>
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated && forecastsToShow.Any())
 {
     <p>
         <button id="nextBtn" class="nav-btn right-btn" onclick="nextSlide()">&#10095;</button>
