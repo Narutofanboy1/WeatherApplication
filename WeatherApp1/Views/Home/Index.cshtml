@@ -20,12 +20,12 @@
     {
         return description switch
         {
-            "предимно слънчево" => "sunny",  
-            "слънчево" => "sunny",  
-            "предимно облачно" => "cloudy", 
-            "облачно" => "cloudy",  
-            "предимно слънчево кратък дъжд" => "sunnyRainy",  
-            "предимно слънчево кратък сняг" => "sunnySnowy", 
+            "предимно слънчево" => "sunny",
+            "слънчево" => "sunny",
+            "предимно облачно" => "cloudy",
+            "облачно" => "cloudy",
+            "предимно слънчево кратък дъжд" => "sunnyRainy",
+            "предимно слънчево кратък сняг" => "sunnySnowy",
             "предимно облачно сняг" => "cloudySnowy",
             "предимно облачно кратък сняг" => "cloudySnowy",
             "предимно облачно дъжд" => "cloudyRainy",
@@ -34,7 +34,7 @@
             "облачно дъжд" => "cloudyRainy",
             "облачно кратък дъжд" => "cloudyRainy",
             "облачно кратък сняг" => "cloudySnowy",
-            _ => "bg-gray-200 text-black"  
+            _ => "bg-gray-200 text-black"
         };
     }
 
@@ -55,6 +55,7 @@
             _ => "🌈"
         };
     }
+
     // Function to determine moon phase image
     string GetMoonPhaseImage(string moonPhase)
     {
@@ -68,7 +69,7 @@
             "залязващ полумесец" => "https://images.fineartamerica.com/images-medium-large-5/waning-crescent-moon-nasagsfc-svsscience-photo-library.jpg",
             "изгряващ полумесец" => "https://images.fineartamerica.com/images-medium-large-5/waxing-crescent-moon-nasagsfc-svsscience-photo-library.jpg",
             "новолуние" => "https://c.tadst.com/gfx/600x337/total-solar-elipse-diamondring.jpg?1",
-            _ => "https://cdn.britannica.com/96/208796-050-47869FC7/full-moon.jpg" // Default to full moon if unknown
+            _ => "https://cdn.britannica.com/96/208796-050-47869FC7/full-moon.jpg"
         };
     }
 }
@@ -108,7 +109,14 @@
                             </div>
                         }
                         <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
-                            <p class="text-center text-white">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
+
+                        <span class="weather-emoji"
+                              onmouseover="showTooltip(this, '@item.WeatherDescription')"
+                              onmouseout="hideTooltip(this)">
+                            @GetWeatherEmoji(item.WeatherDescription)
+                        </span>
+                        <span class="weather-description-tooltip">@Html.DisplayFor(modelItem => item.WeatherDescription)</span>
+
 
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -125,7 +133,6 @@
                                     TimeSpan dayDuration = item.Sunset - item.Sunrise;
                                     string formattedDuration = $"{dayDuration.Hours} ч. {dayDuration.Minutes} мин.";
                                 }
-
                                 <li class="list-group-item">
                                     ⏳ <strong>Продължителност на деня:</strong>
                                     <br> <!-- Forces a new line for better alignment -->
@@ -139,9 +146,7 @@
                                              class="moon-phase-img"
                                              onmouseover="showTooltip(this, '@item.MoonPhase')"
                                              onmouseout="hideTooltip(this)" />
-
                                         <div class="moon-tooltip">@item.MoonPhase</div>
-
                                     </div>
                                 </li>
                             </ul>
@@ -202,26 +207,12 @@
         function toggleSettingsMenu(element) {
             // Close any open menus first
             document.querySelectorAll(".settings-menu").forEach(menu => {
-                if (menu !== element.querySelector(".settings-menu")) {
-                    menu.classList.remove("active");
-                }
+                if (menu !== element.nextElementSibling) menu.style.display = "none";
             });
-
-            // Toggle the clicked menu
-            let menu = element.querySelector(".settings-menu");
-            menu.classList.toggle("active");
+            // Toggle current menu visibility
+            let menu = element.nextElementSibling;
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
-
-        // Close the settings menu when clicking outside
-        document.addEventListener("click", function (event) {
-            let isClickInside = event.target.closest(".settings-icon");
-
-            if (!isClickInside) {
-                document.querySelectorAll(".settings-menu").forEach(menu => {
-                    menu.classList.remove("active");
-                });
-            }
-        });
 
         function showTooltip(element, text) {
             let tooltip = element.nextElementSibling;
@@ -235,5 +226,7 @@
             tooltip.style.visibility = "hidden";
             tooltip.style.opacity = "0";
         }
+
+
     </script>
 }

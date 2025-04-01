@@ -80,7 +80,7 @@ body {
     border-width: 8px;
     border-style: solid;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    padding: 15px;
+    padding: 10px;
     color: white;
     width: 100%;
     max-width: 450px;
@@ -90,11 +90,13 @@ body {
 
 /* Background colors for weather types */
 .sunny {
-    background-color: #ffc107;
+    background-color: #fdd300;
+    border-color: #fdbc00;
 }
 
 .cloudy {
-    background-color: #6c757d;
+    background-color: #808676;
+    border-color: dimgrey;
 }
 
 .sunnryRainy {
@@ -284,4 +286,29 @@ body {
 
 .nav-btn {
     position: absolute;
+}
+
+.weather-description-tooltip {
+    position: absolute; /* Position the tooltip inside the parent container */
+    top: 50%; /* Vertically center it with respect to the emoji */
+    transform: translateY(-50%); /* Adjust vertical alignment */
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    z-index: 10;
+    max-width: 150px; /* Set a max width to prevent overflow */
+    word-wrap: break-word; /* Ensure text doesn't overflow */
+}
+
+.weather-emoji {
+    position: relative; /* This is the container that will be the reference point */
+    cursor: pointer;
+    display: block;
+    text-align: center;
 }

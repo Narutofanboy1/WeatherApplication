@@ -14,16 +14,16 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="DayOfWeek" class="control-label">Select Day</label>
+                <label asp-for="DayOfWeek" class="control-label">Ден</label>
                 <select asp-for="DayOfWeek" class="form-control">
-                    <option value="">-- Select Day --</option>
-                    <option value="Sunday">Sunday</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
+                    <option value="">-- избери ден --</option>
+                    <option value="Понеделник">Понеделник</option>
+                    <option value="Вторник">Вторник</option>
+                    <option value="Сряда">Сряда</option>
+                    <option value="Четвъртък">Четвъртък</option>
+                    <option value="Петък">Петък</option>
+                    <option value="Събота">Събота</option>
+                    <option value="Неделя">Неделя</option>
                 </select>
                 <span asp-validation-for="DayOfWeek" class="text-danger"></span>
             </div>

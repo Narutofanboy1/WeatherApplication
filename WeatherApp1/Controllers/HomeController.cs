@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq;
@@ -29,13 +29,13 @@ namespace WeatherApp1.Controllers
             // Create a dictionary to map days of the week to a numerical value
             var dayOrder = new Dictionary<string, int>
             {
-                { "Monday", 1 },
-                { "Tuesday", 2 },
-                { "Wednesday", 3 },
-                { "Thursday", 4 },
-                { "Friday", 5 },
-                { "Saturday", 6 },
-                { "Sunday", 7 }
+                { "Понеделник", 1 },
+                { "Вторник", 2 },
+                { "Сряда", 3 },
+                { "Четвъртък", 4 },
+                { "Петък", 5 },
+                { "Събота", 6 },
+                { "Неделя", 7 }
             };
 
             // Map each moon phase to its corresponding image
@@ -52,7 +52,7 @@ namespace WeatherApp1.Controllers
           //  };
 
             // Order the weather forecasts by the custom day order
-            var orderedWeatherForecasts = weatherForecasts
+          var orderedWeatherForecasts = weatherForecasts
                 .OrderBy(f => dayOrder[f.DayOfWeek]) // Sort using the dictionary for the correct order
                 .ToList();
 
