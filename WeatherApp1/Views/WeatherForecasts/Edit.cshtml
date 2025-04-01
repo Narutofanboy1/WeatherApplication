@@ -27,21 +27,74 @@
                 </select>
                 <span asp-validation-for="DayOfWeek" class="text-danger"></span>
             </div>
-           <div class="form-group">
-    <label asp-for="WeatherDescription" class="control-label">Weather Description</label>
-    <select asp-for="WeatherDescription" class="form-control">
-        <option value="">-- Select Weather Condition --</option>
-        <option value="Sunny">Sunny</option>
-        <option value="Rainy">Rainy</option>
-        <option value="Cloudy">Cloudy</option>
-        <option value="Stormy">Stormy</option>
-        <option value="Snowy">Snowy</option>
-        <option value="Windy">Windy</option>
-        <option value="Foggy">Foggy</option>
-        <option value="Hazy">Hazy</option>
-    </select>
-    <span asp-validation-for="WeatherDescription" class="text-danger"></span>
-</div>
+            <fieldset class="border border-primary rounded p-3 mb-3">
+                <legend class="float-none w-auto px-2 text-primary">Описание на времето</legend>
+                <div class="d-flex align-items-center">
+                    <input type="checkbox"
+                           value="предимно"
+                           name="mainly"
+                           id="mainly"
+                           class="btn-check" />
+                    <label for="mainly"
+                           class="btn btn-outline-secondary me-2">
+                        предимно
+                    </label>
+                    <div class="btn-group-vertical me-2">
+                        <input type="radio"
+                               value="слънчево"
+                               name="sunnyOrCloudily"
+                               id="sunny"
+                               class="btn-check" />
+                        <label for="sunny"
+                               class="btn btn-outline-secondary mb-2">
+                            слънчево
+                        </label>
+                        <input type="radio"
+                               value="облачно"
+                               name="sunnyOrCloudily"
+                               id="cloudily"
+                               class="btn-check" />
+                        <label for="cloudily"
+                               class="btn btn-outline-secondary">
+                            облачно
+                        </label>
+                    </div>
+                    <input type="checkbox"
+                           value="кратък"
+                           name="brief"
+                           id="brief"
+                           class="btn-check" />
+                    <label for="brief"
+                           class="btn btn-outline-secondary me-2">
+                        кратък
+                    </label>
+                    <div class="btn-group-vertical">
+                        <input type="checkbox"
+                               value="дъжд"
+                               name="rainOrSnow"
+                               id="rain"
+                               class="btn-check" />
+                        <label for="rain"
+                               class="btn btn-outline-secondary mb-2">
+                            дъжд
+                        </label>
+                        <input type="checkbox"
+                               value="сняг"
+                               name="rainOrSnow"
+                               id="snow"
+                               class="btn-check" />
+                        <label for="snow"
+                               class="btn btn-outline-secondary">
+                            сняг
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="WeatherDescription" class="control-label"></label>
+                    <input asp-for="WeatherDescription" id="weatherDescriptionInput" readonly class="form-control-plaintext" />
+                    <span asp-validation-for="WeatherDescription" id="weatherDescriptionSpan" class="text-danger"></span>
+                </div>
+            </fieldset>
             <div class="form-group">
                 <label asp-for="MaxTemperature" class="control-label"></label>
                 <input asp-for="MaxTemperature" class="form-control" />
@@ -114,5 +167,108 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const weatherCode = [0, 0, 0, 0];
+        let errorMessage;
+
+        $(document).ready(function () {
+            $("#mainly").on("click", function () {
+                weatherCode[0] = weatherCode[0] == 0 ? 1 : 0;
+                showDescription();
+            });
+
+            $("[name='sunnyOrCloudily']").on("click", function () {
+                weatherCode[1] = $(this).attr("id") == "sunny" ? 1 : 2;
+                showDescription();
+            });
+
+            $("#brief").on("click", function () {
+                weatherCode[2] = weatherCode[2] == 0 ? 1 : 0;
+                showDescription();
+            });
+
+            $("[name='rainOrSnow']").on("click", function () {
+                if ($(this).attr("id") == "rain" && $("#rain").is(":checked")) {
+                    weatherCode[3] = 1;
+                    $("#snow").prop("checked", false);
+                }
+                else if ($(this).attr("id") == "snow" && $("#snow").is(":checked")) {
+                    weatherCode[3] = 2;
+                    $("#rain").prop("checked", false);
+                }
+                else {
+                    weatherCode[3] = 0;
+                }
+
+                showDescription();
+            });
+
+            // ✅ Corrected: Validate on form submission
+            $("form").on("submit", function (event) {
+                let weatherIsValid = validateWeather();
+
+                if (!weatherIsValid) {
+                    $("#weatherDescriptionSpan").text(errorMessage);
+                    event.preventDefault(); // Prevents form submission
+                } else {
+                    $("#weatherDescriptionSpan").empty(); // Clears previous errors
+                }
+            });
+
+            function showDescription() {
+                let description = "";
+
+                if (weatherCode[0] == 1) {
+                    description = description.concat("предимно ");
+                }
+
+                switch (weatherCode[1]) {
+                    case 1: description = description.concat("слънчево "); break;
+                    case 2: description = description.concat("облачно "); break;
+                }
+
+                if (weatherCode[2] == 1) {
+                    description = description.concat("кратък ");
+                }
+
+                switch (weatherCode[3]) {
+                    case 1: description = description.concat("дъжд"); break;
+                    case 2: description = description.concat("сняг"); break;
+                }
+
+                description = description.trimEnd();
+
+                $("#weatherDescriptionInput").val(description);
+            }
+
+            function validateWeather() {
+                if (weatherCode[0] == 0 && weatherCode[1] == 0 && weatherCode[2] == 0 && weatherCode[3] == 0) {
+                    errorMessage = "Не сте въвели никакво описание.";
+                    return false;
+                }
+                else if ((weatherCode[1] == 1 && weatherCode[3] == 1) ||
+                    (weatherCode[1] == 1 && weatherCode[3] == 2)) {
+                    errorMessage = "Въвели сте нелогично описание.";
+                    return false;
+                }
+                else if (weatherCode[0] == 1 && weatherCode[1] == 0) {
+                    errorMessage = "Не сте уточнили за какво се отнася наречието \"предимно\".";
+                    return false;
+                }
+                else if (weatherCode[2] == 1 && weatherCode[3] == 0) {
+                    errorMessage = "Не сте уточнили за какво се отнася прилагателното \"кратък\".";
+                    return false;
+                }
+                else if (weatherCode[1] == 0) {
+                    errorMessage = "Липсва едно от двете задължителни прилагателни: \"слънчево\" или \"облачно\".";
+                    return false;
+                }
+
+                return true;
+            }
+        });
+    </script>
 }

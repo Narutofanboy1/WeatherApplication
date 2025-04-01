@@ -20,12 +20,21 @@
     {
         return description switch
         {
-            "Sunny" => "sunny",
-            "Cloudy" => "cloudy",
-            "Rainy" => "rainy",
-            "Stormy" => "stormy",
-            "Snowy" => "snowy",
-            _ => "default"
+            "предимно слънчево" => "sunny",  
+            "слънчево" => "sunny",  
+            "предимно облачно" => "cloudy", 
+            "облачно" => "cloudy",  
+            "предимно слънчево кратък дъжд" => "sunnyRainy",  
+            "предимно слънчево кратък сняг" => "sunnySnowy", 
+            "предимно облачно сняг" => "cloudySnowy",
+            "предимно облачно кратък сняг" => "cloudySnowy",
+            "предимно облачно дъжд" => "cloudyRainy",
+            "предимно облачно кратък дъжд" => "cloudyRainy",
+            "облачно сняг" => "cloudySnowy",
+            "облачно дъжд" => "cloudyRainy",
+            "облачно кратък дъжд" => "cloudyRainy",
+            "облачно кратък сняг" => "cloudySnowy",
+            _ => "bg-gray-200 text-black"  
         };
     }
     // Function to determine moon phase image
@@ -81,7 +90,7 @@
                             </div>
                         }
                         <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
-                        <p class="text-center text-muted">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
+                            <p class="text-center text-white">@Html.DisplayFor(modelItem => item.WeatherDescription)</p>
 
                         @if (User.Identity.IsAuthenticated)
                         {
