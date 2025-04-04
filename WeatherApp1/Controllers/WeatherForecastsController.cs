@@ -29,27 +29,7 @@ namespace WeatherApp1.Controllers
         // GET: WeatherForecasts
         public async Task<IActionResult> Index()
         {
-            // Fetch all weather forecasts from the database
             var weatherForecasts = await _context.WeatherForecasts.ToListAsync();
-
-            // Get the current day of the week (DayOfWeek is an enum, where Sunday is 0 and Saturday is 6)
-            var currentDay = DateTime.Now.DayOfWeek;
-
-            // Filter out any forecasts from past days
-            var forecasts = weatherForecasts.Where(f =>
-                Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList().IndexOf((DayOfWeek)Enum.Parse(typeof(DayOfWeek), f.DayOfWeek)) >= (int)currentDay).ToList();
-
-            // Define the number of days to show based on user role and authentication status
-            int forecastDaysToShow = 3;
-            if (_signInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
-            {
-                forecastDaysToShow = 7; // Registered users see 7 days ahead
-            }
-
-            // Filter the forecasts based on the number of days to show (also keeping future days in mind)
-            var forecastsToShow = forecasts.Take(forecastDaysToShow).ToList();
-
-            // Create a dictionary to map days of the week to a numerical value for sorting
             var dayOrder = new Dictionary<string, int>
             {
                 { "Monday", 1 },
@@ -61,12 +41,10 @@ namespace WeatherApp1.Controllers
                 { "Sunday", 7 }
             };
 
-            // Order the weather forecasts by the custom day order
-            var orderedWeatherForecasts = forecastsToShow
-                .OrderBy(f => dayOrder[f.DayOfWeek]) // Sort using the dictionary for the correct order
+            var orderedWeatherForecasts = weatherForecasts
+                .OrderBy(f => dayOrder[f.DayOfWeek]) 
                 .ToList();
 
-            // Return the view with the ordered and filtered list
             return View(orderedWeatherForecasts);
         }
 
@@ -94,14 +72,11 @@ namespace WeatherApp1.Controllers
             return View();
         }
 
-        // POST: WeatherForecasts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DayOfWeek,WeatherDescription,MaxTemperature,MinTemperature,WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast/*, List<string> WeatherDescriptions*/)
+        public async Task<IActionResult> Create([Bind("Id,DayOfWeek,WeatherDescription,MaxTemperature,MinTemperature," +
+            "WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast)
         {
             if (weatherForecast.MaxTemperature < weatherForecast.MinTemperature)
             {
@@ -135,7 +110,7 @@ namespace WeatherApp1.Controllers
             return View(weatherForecast);
         }
 
-        // GET: WeatherForecasts/Edit/5
+       
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -158,7 +133,8 @@ namespace WeatherApp1.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DayOfWeek,WeatherDescription,MaxTemperature,MinTemperature,WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DayOfWeek,WeatherDescription,MaxTemperature,MinTemperature," +
+            "WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast)
         {
             if (id != weatherForecast.Id)
             {
@@ -186,13 +162,6 @@ namespace WeatherApp1.Controllers
                 ModelState.AddModelError("Sunrise", "Изгревът трябва да е преди залеза.");
                 ModelState.AddModelError("Sunset", "Залезът трябва да е след изгрева.");
             }
-
-        //    if (!string.IsNullOrEmpty(weatherForecast.MoonPhase))
-          //  {
-           //     string moonPhaseImagePath = $"/images/moon_phases/{weatherForecast.MoonPhase}.jpg";
-                // You can check if the file actually exists, but since the file paths should already be defined, we'll skip this step
-           // }
-
             if (ModelState.IsValid)
             {
                 try

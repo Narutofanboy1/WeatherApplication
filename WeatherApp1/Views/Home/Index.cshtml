@@ -165,6 +165,8 @@
     </p>
 }
 
+
+
 @section Scripts {
     <script>
         let index = 0;
@@ -207,12 +209,26 @@
         function toggleSettingsMenu(element) {
             // Close any open menus first
             document.querySelectorAll(".settings-menu").forEach(menu => {
-                if (menu !== element.nextElementSibling) menu.style.display = "none";
+                if (menu !== element.querySelector(".settings-menu")) {
+                    menu.classList.remove("active");
+                }
             });
-            // Toggle current menu visibility
-            let menu = element.nextElementSibling;
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
+
+            // Toggle the clicked menu
+            let menu = element.querySelector(".settings-menu");
+            menu.classList.toggle("active");
         }
+
+        // Close the settings menu when clicking outside
+        document.addEventListener("click", function (event) {
+            let isClickInside = event.target.closest(".settings-icon");
+
+            if (!isClickInside) {
+                document.querySelectorAll(".settings-menu").forEach(menu => {
+                    menu.classList.remove("active");
+                });
+            }
+        });
 
         function showTooltip(element, text) {
             let tooltip = element.nextElementSibling;
@@ -226,7 +242,5 @@
             tooltip.style.visibility = "hidden";
             tooltip.style.opacity = "0";
         }
-
-
     </script>
-}
+    }

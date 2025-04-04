@@ -47,6 +47,9 @@ namespace WeatherApp1.Models
         [Required(ErrorMessage = "Въведете час на залеза.")]
         public TimeSpan Sunset { get; set; }
 
+        [Display(Name = "Продължителност на деня")]
+        public TimeSpan DayDuration { get; set; }
+
         [Display(Name = "Фаза на луната")]
         [Required(ErrorMessage = "Въведете фазата на луната.")]
         public string MoonPhase { get; set; }

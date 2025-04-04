@@ -23,10 +23,7 @@ namespace WeatherApp1.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Fetch all weather forecasts from the database
             var weatherForecasts = await _context.WeatherForecasts.ToListAsync();
-
-            // Create a dictionary to map days of the week to a numerical value
             var dayOrder = new Dictionary<string, int>
             {
                 { "Понеделник", 1 },
@@ -38,38 +35,9 @@ namespace WeatherApp1.Controllers
                 { "Неделя", 7 }
             };
 
-            // Map each moon phase to its corresponding image
-           // var moonImages = new Dictionary<string, string>
-          //  {
-             //   { "New Moon", "NewMoon.png" },
-            //    { "Waxing Crescent", "WaxingCrescent.png" },
-             //   { "First Quarter", "FirstQuarter.png" },
-              //  { "Waxing Gibbous", "WaxingGibbous.png" },
-               // { "Full Moon", "FullMoon.png" },
-             //   { "Waning Gibbous", "WaningGibbous.png" },
-             //   { "Last Quarter", "LastQuarter.png" },
-              //  { "Waning Crescent", "WaningCrescent.png" }
-          //  };
-
-            // Order the weather forecasts by the custom day order
           var orderedWeatherForecasts = weatherForecasts
-                .OrderBy(f => dayOrder[f.DayOfWeek]) // Sort using the dictionary for the correct order
+                .OrderBy(f => dayOrder[f.DayOfWeek]) 
                 .ToList();
-
-            // Assign the correct image path to each weather forecast's MoonPhase
-          //  foreach (var forecast in orderedWeatherForecasts)
-           // {
-           //     if (moonImages.ContainsKey(forecast.MoonPhase))
-             //   {
-              //      forecast.MoonPhase = $"/images/{moonImages[forecast.MoonPhase]}";
-              ///  }
-               // else
-               // {
-                    // Optionally, you can provide a default image or handle unknown phases
-               //     forecast.MoonPhase = "/images/DefaultMoon.png"; // Make sure you have a default image if needed
-               // }
-           // }
-
             return View(orderedWeatherForecasts);
         }
 
