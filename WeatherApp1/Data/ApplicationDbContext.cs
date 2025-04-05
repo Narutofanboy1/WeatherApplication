@@ -12,6 +12,8 @@ namespace WeatherApp1.Data
             : base(options)
         {
         }
+        public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -45,6 +47,5 @@ namespace WeatherApp1.Data
                 entity.ToTable(name: "UserTokens");
             });
         }
-        public DbSet<WeatherForecast> WeatherForecasts { get; set; }
     }
 }

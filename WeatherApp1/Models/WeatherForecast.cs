@@ -53,5 +53,11 @@ namespace WeatherApp1.Models
         [Display(Name = "Фаза на луната")]
         [Required(ErrorMessage = "Въведете фазата на луната.")]
         public string MoonPhase { get; set; }
+
+        public void CalculateDayDuration()
+        {
+            DayDuration = Sunset - Sunrise;
+        }
+
     }
 }

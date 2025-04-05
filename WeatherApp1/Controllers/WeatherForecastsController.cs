@@ -76,7 +76,7 @@ namespace WeatherApp1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DayOfWeek,WeatherDescription,MaxTemperature,MinTemperature," +
-            "WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast)
+        "WindSpeed,WindDirection,RainProbability,Sunrise,Sunset,MoonPhase")] WeatherForecast weatherForecast)
         {
             if (weatherForecast.MaxTemperature < weatherForecast.MinTemperature)
             {
@@ -98,11 +98,13 @@ namespace WeatherApp1.Controllers
             {
                 ModelState.AddModelError("Sunrise", "Изгревът трябва да е преди залеза.");
                 ModelState.AddModelError("Sunset", "Залезът трябва да е след изгрева.");
-
             }
 
             if (ModelState.IsValid)
             {
+                // Calculate and set the day duration
+                weatherForecast.DayDuration = weatherForecast.Sunset - weatherForecast.Sunrise;
+
                 _context.Add(weatherForecast);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
@@ -110,7 +112,8 @@ namespace WeatherApp1.Controllers
             return View(weatherForecast);
         }
 
-       
+
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
