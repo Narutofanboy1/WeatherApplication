@@ -25,8 +25,6 @@ namespace WeatherApp1.Controllers
             _userManager = userManager;
         }
 
-
-        // GET: WeatherForecasts
         public async Task<IActionResult> Index()
         {
             var weatherForecasts = await _context.WeatherForecasts.ToListAsync();
@@ -48,7 +46,7 @@ namespace WeatherApp1.Controllers
             return View(orderedWeatherForecasts);
         }
 
-        // GET: WeatherForecasts/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -66,7 +64,7 @@ namespace WeatherApp1.Controllers
             return View(weatherForecast);
         }
 
-        // GET: WeatherForecasts/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -102,7 +100,6 @@ namespace WeatherApp1.Controllers
 
             if (ModelState.IsValid)
             {
-                // Calculate and set the day duration
                 weatherForecast.DayDuration = weatherForecast.Sunset - weatherForecast.Sunrise;
 
                 _context.Add(weatherForecast);
@@ -113,7 +110,7 @@ namespace WeatherApp1.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -129,9 +126,7 @@ namespace WeatherApp1.Controllers
             return View(weatherForecast);
         }
 
-        // POST: WeatherForecasts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -188,7 +183,7 @@ namespace WeatherApp1.Controllers
             return View(weatherForecast);
         }
 
-        // GET: WeatherForecasts/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -206,7 +201,6 @@ namespace WeatherApp1.Controllers
             return View(weatherForecast);
         }
 
-        // POST: WeatherForecasts/Delete/5
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

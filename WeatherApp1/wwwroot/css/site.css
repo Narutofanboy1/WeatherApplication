@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -25,9 +25,10 @@ body {
 
 
 /* Custom blue button for login/logout */
+
 .btn-blue {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #484b4d;
+    border-color: #484b4d;
     color: white !important;
     padding: 0.375rem 0.75rem;
     border-radius: 0.25rem;
@@ -288,27 +289,41 @@ body {
     position: absolute;
 }
 
-.weather-description-tooltip {
-    position: absolute; /* Position the tooltip inside the parent container */
-    top: 50%; /* Vertically center it with respect to the emoji */
-    transform: translateY(-50%); /* Adjust vertical alignment */
+.weather-emoji-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.weather-tooltip {
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.85);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 13px;
     white-space: nowrap;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-    z-index: 10;
-    max-width: 150px; /* Set a max width to prevent overflow */
-    word-wrap: break-word; /* Ensure text doesn't overflow */
+    transition: opacity 0.3s ease;
+    z-index: 20;
 }
 
-.weather-emoji {
-    position: relative; /* This is the container that will be the reference point */
-    cursor: pointer;
-    display: block;
-    text-align: center;
+.weather-emoji-container:hover .weather-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.moon-phase-emoji {
+    font-size: 2.2rem;
+    display: inline; /* или inline-block */
+    line-height: 1;
+    vertical-align: middle; /* Подравнява го с текста */
+    margin-left: 5px; /* По желание – леко разстояние от текста */
 }

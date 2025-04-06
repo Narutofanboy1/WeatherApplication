@@ -10,12 +10,11 @@
     int forecastDaysToShow = 3;
     if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
     {
-        forecastDaysToShow = 7; // Registered users see 7 days ahead
+        forecastDaysToShow = 7;
     }
 
     var forecastsToShow = User.IsInRole("Admin") ? Model : Model.Take(forecastDaysToShow);
 
-    // Function to determine class based on weather description
     string GetWeatherClass(string description)
     {
         return description switch
@@ -38,38 +37,39 @@
         };
     }
 
-    // Function to get weather emoji based on description
     string GetWeatherEmoji(string description)
     {
         return description switch
         {
             "предимно слънчево" => "☀️",
             "слънчево" => "☀️",
-            "предимно облачно" => "🌥️",
             "облачно" => "☁️",
-            "предимно слънчево кратък дъжд" => "🌤️🌧️",
-            "предимно слънчево кратък сняг" => "🌤️❄️",
-            "предимно облачно сняг" => "🌥️❄️",
+            "предимно облачно" => "🌥️",
             "облачно дъжд" => "☁️🌧️",
             "облачно сняг" => "☁️❄️",
+            "предимно облачно сняг" => "🌥️❄️",
+            "предимно облачно дъжд" => "🌥️🌧️",
+            "предимно облачно кратък сняг" => "☁️❄️",
+            "предимно облачно кратък дъжд" => "☁️🌧️",
+            "облачно кратък дъжд" => "☁️🌧️",
+            "облачно кратък сняг" => "☁️❄️",
             _ => "🌈"
         };
     }
 
-    // Function to determine moon phase image
     string GetMoonPhaseImage(string moonPhase)
     {
-        return moonPhase switch
+        return moonPhase.ToLower() switch
         {
-            "пълнолуние" => "https://cdn.britannica.com/96/208796-050-47869FC7/full-moon.jpg",
-            "първа четвърт" => "https://pbs.twimg.com/media/FFUOdsCXoAMPyn2.png",
-            "трета четвърт" => "https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTEyL3Vwd2s3OTIxNjMyMi13aWtpbWVkaWEtaW1hZ2Utam9iMTQ0OS1sYmcxcnRjaS5qcGc.jpg",
-            "намаляваща луна" => "https://earthsky.org/upl/2023/02/Waning-gibbous-Feb-10-2023-Jerermy-Likness-e1677002332927.jpg",
-            "растяща луна" => "https://c.tadst.com/gfx/1200x630/waxing-gibbous-moon.jpg?1",
-            "залязващ полумесец" => "https://images.fineartamerica.com/images-medium-large-5/waning-crescent-moon-nasagsfc-svsscience-photo-library.jpg",
-            "изгряващ полумесец" => "https://images.fineartamerica.com/images-medium-large-5/waxing-crescent-moon-nasagsfc-svsscience-photo-library.jpg",
-            "новолуние" => "https://c.tadst.com/gfx/600x337/total-solar-elipse-diamondring.jpg?1",
-            _ => "https://cdn.britannica.com/96/208796-050-47869FC7/full-moon.jpg"
+            "новолуние" => "🌑",
+            "изгряващ полумесец" => "🌒",
+            "първа четвърт" => "🌓",
+            "растяща луна" => "🌔",
+            "пълнолуние" => "🌕",
+            "намаляваща луна" => "🌖",
+            "трета четвърт" => "🌗",
+            "залязващ полумесец" => "🌘",
+            _ => "🌕"
         };
     }
 }
@@ -108,49 +108,50 @@
                                 </div>
                             </div>
                         }
+
                         <h5 class="card-title text-center"><strong>@Html.DisplayFor(modelItem => item.DayOfWeek)</strong></h5>
 
-                        <span class="weather-emoji"
-                              onmouseover="showTooltip(this, '@item.WeatherDescription')"
-                              onmouseout="hideTooltip(this)">
-                            @GetWeatherEmoji(item.WeatherDescription)
-                        </span>
-                        <span class="weather-description-tooltip">@Html.DisplayFor(modelItem => item.WeatherDescription)</span>
+                        <div class="weather-emoji-container">
+                            <span class="weather-emoji">@GetWeatherEmoji(item.WeatherDescription)</span>
+                            <div class="weather-tooltip">@item.WeatherDescription</div>
+                        </div>
 
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @(User.Identity.IsAuthenticated ? $"{item.MaxTemperature}°C" : "-")</li>
+                            <li class="list-group-item">🌡️ <strong>Мин. температура:</strong> @(User.Identity.IsAuthenticated ? $"{item.MinTemperature}°C" : "-")</li>
+                            <li class="list-group-item">💨 <strong>Скорост на вятъра:</strong> @(User.Identity.IsAuthenticated ? $"{item.WindSpeed} км/ч" : "-")</li>
+                            <li class="list-group-item">🧭 <strong>Посока на вятъра:</strong> @(User.Identity.IsAuthenticated ? item.WindDirection : "-")</li>
+                            <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @(User.Identity.IsAuthenticated ? $"{item.RainProbability}%" : "-")</li>
+                            <li class="list-group-item">🌅 <strong>Изгрев:</strong> @(User.Identity.IsAuthenticated ? $"{item.Sunrise.Hours:D2}:{item.Sunrise.Minutes:D2}" : "-")</li>
+                            <li class="list-group-item">🌇 <strong>Залез:</strong> @(User.Identity.IsAuthenticated ? $"{item.Sunset.Hours:D2}:{item.Sunset.Minutes:D2}" : "-")</li>
 
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">🌡️ <strong>Макс. температура:</strong> @Html.DisplayFor(modelItem => item.MaxTemperature)°C</li>
-                                <li class="list-group-item">🌡️ <strong>Мин. температура:</strong> @Html.DisplayFor(modelItem => item.MinTemperature)°C</li>
-                                <li class="list-group-item">💨 <strong>Скорост на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindSpeed) км/ч</li>
-                                <li class="list-group-item">🧭 <strong>Посока на вятъра:</strong> @Html.DisplayFor(modelItem => item.WindDirection)</li>
-                                <li class="list-group-item">🌧️ <strong>Вероятност за дъжд:</strong> @Html.DisplayFor(modelItem => item.RainProbability)%</li>
-                                <li class="list-group-item">🌅 <strong>Изгрев:</strong> @Html.DisplayFor(modelItem => item.Sunrise)</li>
-                                <li class="list-group-item">🌇 <strong>Залез:</strong> @Html.DisplayFor(modelItem => item.Sunset)</li>
-                                @{
-                                    // Calculate Day Duration
-                                    TimeSpan dayDuration = item.Sunset - item.Sunrise;
-                                    string formattedDuration = $"{dayDuration.Hours} ч. {dayDuration.Minutes} мин.";
-                                }
-                                <li class="list-group-item">
-                                    ⏳ <strong>Продължителност на деня:</strong>
-                                    <br> <!-- Forces a new line for better alignment -->
-                                    @formattedDuration
-                                </li>
-                                <li class="list-group-item">
-                                    🌙 <strong>Фаза на луната:</strong>
-                                    <div class="moon-phase-container">
-                                        <img src="@GetMoonPhaseImage(item.MoonPhase)"
-                                             alt="@item.MoonPhase"
-                                             class="moon-phase-img"
-                                             onmouseover="showTooltip(this, '@item.MoonPhase')"
-                                             onmouseout="hideTooltip(this)" />
+                            @{
+                                TimeSpan dayDuration = item.Sunset - item.Sunrise;
+                                string formattedDuration = $"{dayDuration.Hours} ч. {dayDuration.Minutes} мин.";
+                            }
+
+                            <li class="list-group-item">
+                                ⏳ <strong>Продължителност на деня:</strong>
+                                @(User.Identity.IsAuthenticated
+                                    ? Html.Raw("<br />" + formattedDuration)
+                                    : " -")
+                            </li>
+
+                            <li class="list-group-item">
+                                🌙 <strong>Фаза на луната:</strong>
+                                <div class="moon-phase-container">
+                                    <span class="moon-phase-emoji">
+                                        @(User.Identity.IsAuthenticated ? GetMoonPhaseImage(item.MoonPhase) : "")
+                                    </span>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
                                         <div class="moon-tooltip">@item.MoonPhase</div>
-                                    </div>
-                                </li>
-                            </ul>
-                        }
+                                    }
+                                </div>
+                            </li>
+
+
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -165,12 +166,10 @@
     </p>
 }
 
-
-
 @section Scripts {
     <script>
         let index = 0;
-        const cardWidth = document.querySelector('.weather-card-container').offsetWidth + 20; // Include margin
+        const cardWidth = document.querySelector('.weather-card-container').offsetWidth + 20;
         const slider = document.querySelector('.weather-slider');
         const totalCards = document.querySelectorAll('.weather-card-container').length;
         const visibleCards = 3;
@@ -191,35 +190,27 @@
 
         function updateSlider() {
             slider.style.transform = `translateX(-${index * cardWidth}px)`;
-            updateNavButtons(); // Check visibility of buttons
+            updateNavButtons();
         }
 
         function updateNavButtons() {
-            // Show/hide buttons based on the current index
             document.getElementById("prevBtn").style.display = (index > 0) ? "block" : "none";
             document.getElementById("nextBtn").style.display = (index < totalCards - visibleCards) ? "block" : "none";
         }
 
-        // Initial check to hide the "Back" button if needed
         document.addEventListener("DOMContentLoaded", updateNavButtons);
 
-        // ============================
-        // Settings Menu Functionality
-        // ============================
         function toggleSettingsMenu(element) {
-            // Close any open menus first
             document.querySelectorAll(".settings-menu").forEach(menu => {
                 if (menu !== element.querySelector(".settings-menu")) {
                     menu.classList.remove("active");
                 }
             });
 
-            // Toggle the clicked menu
             let menu = element.querySelector(".settings-menu");
             menu.classList.toggle("active");
         }
 
-        // Close the settings menu when clicking outside
         document.addEventListener("click", function (event) {
             let isClickInside = event.target.closest(".settings-icon");
 
@@ -229,18 +220,5 @@
                 });
             }
         });
-
-        function showTooltip(element, text) {
-            let tooltip = element.nextElementSibling;
-            tooltip.textContent = text;
-            tooltip.style.visibility = "visible";
-            tooltip.style.opacity = "1";
-        }
-
-        function hideTooltip(element) {
-            let tooltip = element.nextElementSibling;
-            tooltip.style.visibility = "hidden";
-            tooltip.style.opacity = "0";
-        }
     </script>
-    }
+}
